@@ -13,5 +13,11 @@
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+  <div #resizableElement class="resizable-element" (mousedown)="onMouseDown($event)">
+    <div class="resize-handle" (mousedown)="onResizeMouseDown($event)"></div>
+    Conteúdo redimensionável
+  </div>
+
+
+
 </ion-content>

@@ -1,0 +1,15 @@
+.resizable-element {
+    position: absolute;
+    border: 1px solid #000;
+    background-color: lightblue;
+}
+
+.resize-handle {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #000;
+    cursor: nwse-resize;
+    right: 0;
+    bottom: 0;
+}
