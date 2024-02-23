@@ -1,4 +1,5 @@
 import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { FileSystemImageService } from 'src/services/file-system-image.service';
 
 @Component({
   selector: 'app-tab2',
@@ -13,7 +14,18 @@ export class Tab2Page {
   private startX: number;
   private startY: number;
 
-  constructor(private renderer: Renderer2) { }
+  backgroundImage: string = ''
+
+  constructor(
+    private fileSystemImageService: FileSystemImageService,
+    private renderer: Renderer2
+  ) { }
+
+  setBackground() {
+    this.fileSystemImageService.getPhoto(0).then((res: any) => {
+      this.backgroundImage = res.webviewPath
+    })
+  }
 
   onMouseDown(event: MouseEvent): void {
     this.startDragging(event.clientX, event.clientY);
@@ -133,9 +145,6 @@ export class Tab2Page {
   private stopResizing(): void {
     this.isResizing = false;
     this.renderer.removeClass(document.body, 'no-select');
-
-    //this.renderer.removeListen('document', 'mousemove');
-    //this.renderer.removeListen('document', 'mouseup');
   }
 
   private onTouchMouseMove(event): void {

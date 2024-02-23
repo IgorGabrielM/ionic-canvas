@@ -13,23 +13,15 @@
     </ion-toolbar>
   </ion-header>
 
-  <!--   <div #draggableElement class="draggable-element" (mousedown)="onMouseDown($event)"
-    (touchstart)="onTouchStart($event)">
-    Arraste-me!
-  </div> -->
 
+  <ion-button expand="full" (click)="setBackground()">
+    <ion-icon slot="start" name="image"></ion-icon>
+    Set Background Image
+  </ion-button>
 
   <div #resizableElement class="resizable-element" (mousedown)="onMouseDown($event)"
-    [ngStyle]="{'background-image': 'url(' + './assets/icon/favicon.png' + ')'}" (touchstart)="onTouchStart($event)">
+    [ngStyle]="{'background-image': 'url(' + backgroundImage + ')'}" (touchstart)="onTouchStart($event)">
     <div class="resize-handle" (mousedown)="onResizeMouseDown($event)" (touchstart)="onResizeTounched($event)"></div>
     <!--Conteúdo redimensionável-->
   </div>
-
-
-  <!--   <div>
-    <div class="w-full h-1full m-30 relative bg-white">
-      <div class="absolute -top-1 -right-1 bg-green-500 rounded-full w-3 h-3">
-      </div>
-    </div>
-  </div> -->
 </ion-content>
