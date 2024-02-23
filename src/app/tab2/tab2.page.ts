@@ -1,4 +1,5 @@
-import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { Platform } from '@ionic/angular';
 import { FileSystemImageService } from 'src/services/file-system-image.service';
 
 @Component({
@@ -6,8 +7,11 @@ import { FileSystemImageService } from 'src/services/file-system-image.service';
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss']
 })
-export class Tab2Page {
+export class Tab2Page implements AfterViewInit {
   @ViewChild('resizableElement', { static: true }) resizableElement: ElementRef;
+
+  @ViewChild('imageCanvas', { static: true }) canvas: any;
+  canvasElement: any;
 
   private isDragging: boolean = false;
   private isResizing: boolean = false;
@@ -16,10 +20,20 @@ export class Tab2Page {
 
   backgroundImage: string = ''
 
+  test: string
+
   constructor(
     private fileSystemImageService: FileSystemImageService,
-    private renderer: Renderer2
+
+    private renderer: Renderer2,
+    private plt: Platform
   ) { }
+
+  ngAfterViewInit(): void {
+    this.canvasElement = this.canvas.nativeElement;
+    this.canvasElement.width = this.plt.width() + '';
+    this.canvasElement.height = 200;
+  }
 
   setBackground() {
     this.fileSystemImageService.getPhoto(0).then((res: any) => {
@@ -163,5 +177,42 @@ export class Tab2Page {
 
     this.startX = touch.pageX;
     this.startY = touch.pageY;
+  }
+
+  save() {
+    const step1X = this.resizableElement.nativeElement.offsetLeft * this.canvasElement.width
+    const screenWidthX = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    const resultX = step1X / screenWidthX
+
+    const step1Y = this.resizableElement.nativeElement.offsetTop * this.canvasElement.height
+    const screenWidthY = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    const resultY = step1Y / screenWidthY
+
+
+    this.setImageOnCanvas(resultX, resultY)
+
+    setTimeout(() => {
+      this.exportCanvasImage()
+    }, 500)
+  }
+
+
+  setImageOnCanvas(x: number, y: number) {
+    let background = new Image();
+    background.src = this.backgroundImage;
+    let ctx = this.canvasElement.getContext('2d');
+
+    background.onload = () => {
+      ctx.drawImage(background, x, y, this.resizableElement.nativeElement.offsetWidth, this.resizableElement.nativeElement.offsetHeight / 2)
+    }
+  }
+
+  exportCanvasImage() {
+    const dataUrl = this.canvasElement.toDataURL();
+    this.fileSystemImageService.getPhoto(2, dataUrl).then((res: any) => {
+      console.log(res)
+      this.test = res.webviewPath
+    })
+    //console.log('image: ', dataUrl)
   }
 }

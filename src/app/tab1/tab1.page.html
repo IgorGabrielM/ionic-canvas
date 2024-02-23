@@ -35,7 +35,7 @@
     Set Background Image
   </ion-button>
 
-  <canvas style="border: 1px #fff solid; width: 100%; height: 400px; background-color: white;" #imageCanvas
+  <canvas style="border: 1px #fff solid; width: 100%; height: 300px; background-color: white;" #imageCanvas
     (mousedown)="startDrawing($event)" (touchstart)="startDrawing($event)" (mousemove)="moved($event)"
     (touchmove)="moved($event)" (mouseup)="endDrawing()" (touched)="endDrawing()"></canvas>
 
@@ -44,9 +44,9 @@
       <ion-icon slot="start" name="trash"></ion-icon>
       Limpar
     </ion-button>
-    <ion-button expand="full" (click)="exportCanvasImage()">
+    <!--     <ion-button expand="full" (click)="exportCanvasImage()">
       <ion-icon slot="start" name="download"></ion-icon>
       Export Canvas Image
-    </ion-button>
+    </ion-button> -->
   </div>
 </ion-content>

@@ -24,4 +24,12 @@
     <div class="resize-handle" (mousedown)="onResizeMouseDown($event)" (touchstart)="onResizeTounched($event)"></div>
     <!--Conteúdo redimensionável-->
   </div>
+
+  <canvas style="border: 1px #fff solid; width: 100%; height: 400px; background-color: white;" #imageCanvas></canvas>
+
+  <ion-button expand="full" (click)="save()">
+    <ion-icon slot="start" name="download"></ion-icon>
+    Save
+  </ion-button>
+
 </ion-content>
