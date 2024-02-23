@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
-import { Platform } from '@ionic/angular';
+import { AlertController, Platform } from '@ionic/angular';
 import { FileSystemImageService } from 'src/services/file-system-image.service';
 
 @Component({
@@ -19,12 +19,36 @@ export class Tab2Page implements AfterViewInit {
   private startY: number;
 
   backgroundImage: string = ''
+  imageSaved: string
 
-  test: string
+  canDraw: boolean = true
+
+  buttons = [
+    {
+      id: 1,
+      name: 'Desenhar',
+      icon: 'brush',
+    },
+    {
+      id: 2,
+      name: 'Imagem',
+      icon: 'image',
+    }
+  ]
+  buttonSelected: { id: number, name: string, icon: string } = this.buttons[0]
+
+  saveX: number;
+  saveY: number;
+  drawing = false;
+
+  selectedColor = '#9e2956';
+  colors = ['#9e2956', '#c2281d', '#de722f', '#edbf4c', '#5db37e', '#459ced', '#4250ad', '#802fa3']
+  lineWidth = 5;
 
   constructor(
     private fileSystemImageService: FileSystemImageService,
 
+    private alertController: AlertController,
     private renderer: Renderer2,
     private plt: Platform
   ) { }
@@ -33,12 +57,132 @@ export class Tab2Page implements AfterViewInit {
     this.canvasElement = this.canvas.nativeElement;
     this.canvasElement.width = this.plt.width() + '';
     this.canvasElement.height = 200;
+
+    this.selectFunction(this.buttons[0])
   }
 
-  setBackground() {
-    this.fileSystemImageService.getPhoto(0).then((res: any) => {
-      this.backgroundImage = res.webviewPath
-    })
+  selectFunction(button: { id: number, name: string, icon: string }) {
+    this.buttonSelected = button;
+    if (button.id === 1) {
+      this.startDraw()
+    }
+    if (button.id === 2) {
+      this.startImage()
+    }
+  }
+
+  //draw
+  startDraw() {
+    this.canDraw = true
+  }
+
+  selectColor(color) {
+    this.selectedColor = color;
+  }
+
+  startDrawing(ev: any) {
+    if (this.canDraw) {
+
+      this.drawing = true;
+      const canvasPosition = this.canvasElement.getBoundingClientRect();
+
+      this.saveX = ev.pageX - canvasPosition.x;
+      this.saveY = ev.pagey - canvasPosition.y;
+    }
+  }
+
+  endDrawing() {
+    this.drawing = false;
+  }
+
+  moved(ev: any) {
+    if (this.canDraw) {
+      if (ev.type === 'mousemove') {
+        if (!this.drawing) return;
+        const canvasPosition = this.canvasElement.getBoundingClientRect();
+        let ctx = this.canvasElement.getContext('2d');
+        let currentX = ev.pageX - canvasPosition.x;
+        let currentY = ev.pageY - canvasPosition.y;
+
+        ctx.linejoin = 'round';
+        ctx.strokeStyle = this.selectedColor;
+        ctx.lineWidth = this.lineWidth;
+
+        ctx.beginPath();
+        ctx.moveTo(this.saveX, this.saveY);
+        ctx.lineTo(currentX, currentY);
+        ctx.closePath();
+        ctx.stroke();
+
+        this.saveX = currentX;
+        this.saveY = currentY;
+      } else {
+        //touchmove
+        const canvasPosition = this.canvasElement.getBoundingClientRect();
+        let ctx = this.canvasElement.getContext('2d');
+        let currentX = ev.changedTouches[0].pageX - canvasPosition.x;
+        let currentY = ev.changedTouches[0].pageY - canvasPosition.y;
+
+        ctx.linejoin = 'round';
+        ctx.strokeStyle = this.selectedColor;
+        ctx.lineWidth = this.lineWidth;
+
+        ctx.beginPath();
+        ctx.moveTo(this.saveX, this.saveY);
+        ctx.lineTo(currentX, currentY);
+        ctx.closePath();
+        ctx.stroke();
+
+        this.saveX = currentX;
+        this.saveY = currentY;
+      }
+    }
+
+  }
+
+  clear() {
+    const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
+    const width = canvasEl.width;
+    const height = canvasEl.height;
+
+    const context = canvasEl.getContext('2d');
+    context.clearRect(0, 0, width, height);
+  }
+
+  //image
+  async startImage() {
+    this.canDraw = false
+    //this.setBackground();
+    const alert = await this.alertController.create({
+      header: 'Selecione uma imagem',
+      buttons: [
+        {
+          text: 'Camera',
+          handler: () => {
+            this.fileSystemImageService.getPhoto(1).then((res: any) => {
+              this.backgroundImage = res.webviewPath
+            })
+          }
+        },
+        {
+          text: 'Galeria',
+          handler: () => {
+            this.fileSystemImageService.getPhoto(0).then((res: any) => {
+              this.backgroundImage = res.webviewPath
+            })
+          }
+        },
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {
+            this.selectFunction(this.buttons[0])
+          }
+        },
+      ],
+    });
+
+    await alert.present();
   }
 
   onMouseDown(event: MouseEvent): void {
@@ -101,10 +245,6 @@ export class Tab2Page implements AfterViewInit {
   private stopDragging(): void {
     this.isDragging = false;
     this.renderer.removeClass(document.body, 'no-select');
-    //console.log(this.resizableElement.nativeElement.style.top)
-    //console.log(this.resizableElement.nativeElement.style.bottom)
-    //console.log(this.resizableElement.nativeElement.style.right)
-    //console.log(this.resizableElement.nativeElement.style.left)
   }
 
   //redimencionar
@@ -179,7 +319,7 @@ export class Tab2Page implements AfterViewInit {
     this.startY = touch.pageY;
   }
 
-  save() {
+  setImageOnCanvas() {
     const step1X = this.resizableElement.nativeElement.offsetLeft * this.canvasElement.width
     const screenWidthX = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
     const resultX = step1X / screenWidthX
@@ -188,31 +328,31 @@ export class Tab2Page implements AfterViewInit {
     const screenWidthY = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
     const resultY = step1Y / screenWidthY
 
-
-    this.setImageOnCanvas(resultX, resultY)
-
-    setTimeout(() => {
-      this.exportCanvasImage()
-    }, 500)
-  }
-
-
-  setImageOnCanvas(x: number, y: number) {
     let background = new Image();
     background.src = this.backgroundImage;
     let ctx = this.canvasElement.getContext('2d');
 
     background.onload = () => {
-      ctx.drawImage(background, x, y, this.resizableElement.nativeElement.offsetWidth, this.resizableElement.nativeElement.offsetHeight / 2)
+      ctx.drawImage(background, resultX, resultY, this.resizableElement.nativeElement.offsetWidth, this.resizableElement.nativeElement.offsetHeight / 2)
     }
+
+    setTimeout(() => {
+      this.backgroundImage = undefined;
+      this.buttonSelected = this.buttons[0]
+      this.startDraw()
+    }, 100)
+  }
+
+  cancelImage() {
+    this.backgroundImage = undefined;
+    this.buttonSelected = this.buttons[0]
+    this.startDraw()
   }
 
   exportCanvasImage() {
     const dataUrl = this.canvasElement.toDataURL();
     this.fileSystemImageService.getPhoto(2, dataUrl).then((res: any) => {
-      console.log(res)
-      this.test = res.webviewPath
+      this.imageSaved = res.webviewPath
     })
-    //console.log('image: ', dataUrl)
   }
 }

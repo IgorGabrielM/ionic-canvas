@@ -1,11 +1,3 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Tab 2
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
@@ -13,23 +5,72 @@
     </ion-toolbar>
   </ion-header>
 
-
-  <ion-button expand="full" (click)="setBackground()">
-    <ion-icon slot="start" name="image"></ion-icon>
-    Set Background Image
-  </ion-button>
-
-  <div #resizableElement class="resizable-element" (mousedown)="onMouseDown($event)"
-    [ngStyle]="{'background-image': 'url(' + backgroundImage + ')'}" (touchstart)="onTouchStart($event)">
-    <div class="resize-handle" (mousedown)="onResizeMouseDown($event)" (touchstart)="onResizeTounched($event)"></div>
-    <!--Conteúdo redimensionável-->
+  <div>
+    <ion-button *ngFor="let button of buttons" (click)="selectFunction(button)"
+      [color]="buttonSelected === button ? 'primary': 'medium'">
+      <ion-icon [name]="button.icon"></ion-icon>
+    </ion-button>
   </div>
 
-  <canvas style="border: 1px #fff solid; width: 100%; height: 400px; background-color: white;" #imageCanvas></canvas>
+  <canvas style="border: 1px #fff solid; width: 100%; height: 300px; background-color: white;" #imageCanvas
+    (mousedown)="startDrawing($event)" (touchstart)="startDrawing($event)" (mousemove)="moved($event)"
+    (touchmove)="moved($event)" (mouseup)="endDrawing()" (touched)="endDrawing()"></canvas>
 
-  <ion-button expand="full" (click)="save()">
-    <ion-icon slot="start" name="download"></ion-icon>
-    Save
-  </ion-button>
+  <!--   <canvas *ngIf="buttonSelected.id !== 1"
+    style="border: 1px #fff solid; width: 100%; height: 400px; background-color: white;" #imageCanvas></canvas> -->
+
+  <div *ngIf="buttonSelected.id === 1">
+    <ion-row>
+      <ion-col *ngFor="let color of colors" [style.background]="color" style="height: 45px;" class="color-block"
+        tappable (click)="selectColor(color)"></ion-col>
+    </ion-row>
+    <ion-radio-group [(ngModel)]="selectedColor">
+      <ion-row>
+        <ion-col *ngFor="let color of colors" class="ion-text-center">
+          <ion-radio [value]="color"></ion-radio>
+        </ion-col>
+      </ion-row>
+    </ion-radio-group>
+
+    <ion-range min="2" max="20" color="primary" [(ngModel)]="lineWidth" style="width: 90%; margin: 0 auto;">
+      <ion-icon size="small" slot="start" name="brush"></ion-icon>
+      <ion-icon slot="end" name="brush"></ion-icon>
+    </ion-range>
+  </div>
+
+
+  <div [class]="buttonSelected.id !== 2 ? 'invisible hidden': 'visible block'">
+    <div #resizableElement [class]="'resizable-element ' + (!backgroundImage ? 'invisible' : 'visible')"
+      (mousedown)="onMouseDown($event)" [ngStyle]="{'background-image': 'url(' + backgroundImage + ')'}"
+      (touchstart)="onTouchStart($event)">
+      <div class="resize-handle" (mousedown)="onResizeMouseDown($event)" (touchstart)="onResizeTounched($event)"></div>
+      <!--Conteúdo redimensionável-->
+    </div>
+
+    <div class="mt-2 flex justify-between gap-2">
+      <ion-button class="w-full rounded-full" (click)="setImageOnCanvas()">
+        <ion-icon slot="start" name="checkmark-circle"></ion-icon>
+        Confirmar
+      </ion-button>
+      <ion-button class="w-full rounded-full" (click)="cancelImage()" color="danger">
+        <ion-icon slot="start" name="close-circle"></ion-icon>
+        Cancelar
+      </ion-button>
+    </div>
+  </div>
+
+  <div class="mt-2 flex justify-between gap-2" *ngIf="buttonSelected.id !== 2">
+    <ion-button class="w-full rounded-full" (click)="exportCanvasImage()">
+      <ion-icon slot="start" name="download"></ion-icon>
+      Save
+    </ion-button>
+
+    <ion-button class="w-full rounded-full" (click)="clear()" color="danger">
+      <ion-icon slot="start" name="trash"></ion-icon>
+      Limpar
+    </ion-button>
+  </div>
+
+  <img *ngIf="imageSaved" [src]="imageSaved">
 
 </ion-content>

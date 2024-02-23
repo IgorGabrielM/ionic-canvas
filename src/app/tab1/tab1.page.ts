@@ -44,7 +44,6 @@ export class Tab1Page implements AfterViewInit {
   }
 
   moved(ev: any) {
-    //console.log(ev);
     if (ev.type === 'mousemove') {
       if (!this.drawing) return;
       const canvasPosition = this.canvasElement.getBoundingClientRect();
