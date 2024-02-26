@@ -1,7 +1,6 @@
 .resizable-element {
     position: absolute;
     border: 1px solid #000;
-    background-color: lightblue;
     width: 100px;
     height: 100px;
     z-index: 50;
@@ -22,4 +21,12 @@
     cursor: nwse-resize;
     right: -10px;
     bottom: -10px;
+}
+
+ion-modal {
+    --width: 85vw;
+    --min-width: 250px;
+    --height: fit-content;
+    --border-radius: 6px;
+    --box-shadow: 0 28px 48px rgba(0, 0, 0, 0.4);
 }

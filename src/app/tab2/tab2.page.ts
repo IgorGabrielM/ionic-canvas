@@ -33,6 +33,11 @@ export class Tab2Page implements AfterViewInit {
       id: 2,
       name: 'Imagem',
       icon: 'image',
+    },
+    {
+      id: 3,
+      name: 'Text',
+      icon: 'text',
     }
   ]
   buttonSelected: { id: number, name: string, icon: string } = this.buttons[0]
@@ -44,6 +49,9 @@ export class Tab2Page implements AfterViewInit {
   selectedColor = '#9e2956';
   colors = ['#9e2956', '#c2281d', '#de722f', '#edbf4c', '#5db37e', '#459ced', '#4250ad', '#802fa3']
   lineWidth = 5;
+
+  whriteText = false;
+  textValue: string
 
   constructor(
     private fileSystemImageService: FileSystemImageService,
@@ -64,10 +72,15 @@ export class Tab2Page implements AfterViewInit {
   selectFunction(button: { id: number, name: string, icon: string }) {
     this.buttonSelected = button;
     if (button.id === 1) {
-      this.startDraw()
+      this.startDraw();
     }
     if (button.id === 2) {
-      this.startImage()
+      this.startImage();
+      this.canDraw = false
+    }
+    if (button.id === 3) {
+      this.startText();
+      this.canDraw = false
     }
   }
 
@@ -354,5 +367,20 @@ export class Tab2Page implements AfterViewInit {
     this.fileSystemImageService.getPhoto(2, dataUrl).then((res: any) => {
       this.imageSaved = res.webviewPath
     })
+  }
+
+  //text
+  startText() {
+    this.whriteText = true;
+  }
+
+  drawText(): void {
+    this.whriteText = false;
+    const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
+
+    /*     const context = canvasEl.getContext('2d');
+        context.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+        context.font = "20px Arial";
+        context.fillText(this.textValue, 10, 50); */
   }
 }

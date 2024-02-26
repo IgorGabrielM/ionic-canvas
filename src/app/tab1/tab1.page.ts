@@ -112,4 +112,13 @@ export class Tab1Page implements AfterViewInit {
     context.clearRect(0, 0, width, height);
   }
 
+  drawText(): void {
+    const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
+
+    const context = canvasEl.getContext('2d');
+    context.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
+    context.font = "20px Arial";
+    context.fillText("Menssagem de teste", 10, 50);
+  }
+
 }
