@@ -90,7 +90,9 @@
     </ion-button>
   </div>
 
-  <img *ngIf="imageSaved" [src]="imageSaved">
+  <div class="my-3">
+    <img *ngIf="imageSaved" [src]="imageSaved">
+  </div>
 </ion-content>
 
 <ion-modal [isOpen]="whriteText">

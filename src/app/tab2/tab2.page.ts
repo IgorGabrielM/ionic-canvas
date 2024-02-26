@@ -72,6 +72,12 @@ export class Tab2Page implements AfterViewInit {
     this.canvasElement.width = this.plt.width() + '';
     this.canvasElement.height = 200;
 
+    const ctx = this.canvasElement.getContext('2d');
+
+    // Definir o plano de fundo como branco
+    ctx.fillStyle = 'white';
+    ctx.fillRect(0, 0, this.canvasElement.width, this.canvasElement.height);
+
     this.selectFunction(this.buttons[0])
   }
 
