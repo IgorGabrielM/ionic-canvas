@@ -73,10 +73,12 @@ export class Tab2Page implements AfterViewInit {
     this.buttonSelected = button;
     if (button.id === 1) {
       this.startDraw();
+      this.textValue = undefined
     }
     if (button.id === 2) {
       this.startImage();
       this.canDraw = false
+      this.textValue = undefined
     }
     if (button.id === 3) {
       this.startText();
@@ -372,15 +374,30 @@ export class Tab2Page implements AfterViewInit {
   //text
   startText() {
     this.whriteText = true;
+    this.backgroundImage = undefined;
+  }
+
+  cancelText() {
+    this.whriteText = false;
+    this.textValue = undefined;
+    this.canDraw = true;
+    this.buttonSelected = this.buttons[0];
   }
 
   drawText(): void {
     this.whriteText = false;
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
 
-    /*     const context = canvasEl.getContext('2d');
-        context.clearRect(0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
-        context.font = "20px Arial";
-        context.fillText(this.textValue, 10, 50); */
+    const step1X = this.resizableElement.nativeElement.offsetLeft * this.canvasElement.width
+    const screenWidthX = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+    const resultX = step1X / screenWidthX
+
+    const step1Y = this.resizableElement.nativeElement.offsetTop * this.canvasElement.height
+    const screenWidthY = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+    const resultY = step1Y / screenWidthY
+
+    const context = canvasEl.getContext('2d');
+    context.font = "20px Arial";
+    context.fillText(this.textValue, resultX, resultY * 2);
   }
 }

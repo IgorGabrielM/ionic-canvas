@@ -40,14 +40,16 @@
 
 
   <div [class]="(buttonSelected.id !== 2 && buttonSelected.id !== 3) ? 'invisible hidden': 'visible block'">
-    <div #resizableElement [class]="'resizable-element ' + (!backgroundImage ? 'invisible' : 'visible')"
+    <div #resizableElement
+      [class]="'resizable-element bg-transparent ' + (!backgroundImage && buttonSelected.id == 2 ? 'invisible' : 'visible')"
       (mousedown)="onMouseDown($event)" [ngStyle]="{'background-image': 'url(' + backgroundImage + ')'}"
       (touchstart)="onTouchStart($event)">
       <div class="resize-handle" (mousedown)="onResizeMouseDown($event)" (touchstart)="onResizeTounched($event)"></div>
       <!--Conteúdo redimensionável-->
+      <p *ngIf="buttonSelected.id === 3" class="text-black text-lg">{{ textValue }}</p>
     </div>
 
-    <div class="mt-2 flex justify-between gap-2">
+    <div *ngIf="buttonSelected.id === 2" class="mt-2 flex justify-between gap-2">
       <ion-button class="w-full rounded-full" (click)="setImageOnCanvas()">
         <ion-icon slot="start" name="checkmark-circle"></ion-icon>
         Confirmar
@@ -59,40 +61,15 @@
     </div>
   </div>
 
-  <!--   <div [class]="buttonSelected.id !== 3 ? 'invisible hidden': 'visible block'">
-    <div #resizableElement class="resizable-element bg-white" (mousedown)="onMouseDown($event)"
-      (touchstart)="onTouchStart($event)">
-      <div class="resize-handle" (mousedown)="onResizeMouseDown($event)" (touchstart)="onResizeTounched($event)"></div>
-      <p class="text-black">{{ textValue }}</p>
-    </div>
-
-    <div class="mt-2 flex justify-between gap-2">
-      <ion-button class="w-full rounded-full" (click)="setImageOnCanvas()">
-        <ion-icon slot="start" name="checkmark-circle"></ion-icon>
-        Confirmar
-      </ion-button>
-      <ion-button class="w-full rounded-full" (click)="cancelImage()" color="danger">
-        <ion-icon slot="start" name="close-circle"></ion-icon>
-        Cancelar
-      </ion-button>
-    </div>
-  </div>
-
-  <div class="mt-2 flex justify-between gap-2" *ngIf="buttonSelected.id !== 2">
-    <ion-button class="w-full rounded-full" (click)="exportCanvasImage()">
-      <ion-icon slot="start" name="download"></ion-icon>
-      Save
+  <div *ngIf="buttonSelected.id === 3" class="mt-2 flex justify-between gap-2">
+    <ion-button class="w-full rounded-full" (click)="drawText()">
+      Confirmar
     </ion-button>
 
-    <ion-button class="w-full rounded-full" (click)="clear()" color="danger">
-      <ion-icon slot="start" name="trash"></ion-icon>
-      Limpar
+    <ion-button class="w-full rounded-full" (click)="cancelText()" color="danger">
+      Cancelar
     </ion-button>
   </div>
- -->
-  <ion-button class="w-full rounded-full" (click)="drawText()" color="danger">
-    Teste
-  </ion-button>
 
   <img *ngIf="imageSaved" [src]="imageSaved">
 </ion-content>
@@ -112,6 +89,6 @@
     <div class="flex justify-center">
       <ion-textarea class="w-11/12" [(ngModel)]="textValue" placeholder="Digite um texto" rows="10"></ion-textarea>
     </div>
-    <ion-button class="w-11/12 rounded-xl mx-auto m-2" (click)="drawText()">Confirmar</ion-button>
+    <ion-button class="w-11/12 rounded-xl mx-auto m-2" (click)="this.whriteText = false">Confirmar</ion-button>
   </ng-template>
 </ion-modal>
