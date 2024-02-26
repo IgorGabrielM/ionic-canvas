@@ -63,10 +63,12 @@
 
   <div *ngIf="buttonSelected.id === 3" class="mt-2 flex justify-between gap-2">
     <ion-button class="w-full rounded-full" (click)="drawText()">
+      <ion-icon slot="start" name="checkmark-circle"></ion-icon>
       Confirmar
     </ion-button>
 
     <ion-button class="w-full rounded-full" (click)="cancelText()" color="danger">
+      <ion-icon slot="start" name="close-circle"></ion-icon>
       Cancelar
     </ion-button>
   </div>
