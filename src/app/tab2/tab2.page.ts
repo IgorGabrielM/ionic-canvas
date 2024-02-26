@@ -38,6 +38,11 @@ export class Tab2Page implements AfterViewInit {
       id: 3,
       name: 'Text',
       icon: 'text',
+    },
+    {
+      id: 4,
+      name: 'Shapes',
+      icon: 'shapes',
     }
   ]
   buttonSelected: { id: number, name: string, icon: string } = this.buttons[0]
@@ -48,6 +53,7 @@ export class Tab2Page implements AfterViewInit {
 
   selectedColor = '#9e2956';
   colors = ['#9e2956', '#c2281d', '#de722f', '#edbf4c', '#5db37e', '#459ced', '#4250ad', '#802fa3']
+  shapes: string[] = ['../../assets/shapes/arrow.png', '../../assets/shapes/square.png']
   lineWidth = 5;
 
   whriteText = false;
