@@ -79,6 +79,17 @@
     </ion-button>
   </div>
 
+  <div class="flex justify-between gap-2 mt-2 mx-2">
+    <ion-button class="w-full rounded-full" (click)="clear()" color="danger">
+      <ion-icon slot="start" name="trash"></ion-icon>
+      Limpar
+    </ion-button>
+    <ion-button class="w-full rounded-full" (click)="exportCanvasImage()">
+      <ion-icon slot="start" name="download"></ion-icon>
+      Export Canvas Image
+    </ion-button>
+  </div>
+
   <img *ngIf="imageSaved" [src]="imageSaved">
 </ion-content>
 
