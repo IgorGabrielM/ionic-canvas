@@ -52,9 +52,10 @@ export class Tab2Page implements AfterViewInit {
   drawing = false;
 
   selectedColor = '#9e2956';
-  colors = ['#9e2956', '#c2281d', '#de722f', '#edbf4c', '#5db37e', '#459ced', '#4250ad', '#802fa3']
+  colors = ['#000', '#fff', '#9e2956', '#c2281d', '#de722f', '#edbf4c', '#5db37e', '#459ced', '#4250ad', '#802fa3']
   shapes: string[] = ['../../assets/shapes/arrow.png', '../../assets/shapes/square.png']
   lineWidth = 5;
+  fontSize = 20;
 
   whriteText = false;
   textValue: string
@@ -105,6 +106,7 @@ export class Tab2Page implements AfterViewInit {
 
   selectColor(color) {
     this.selectedColor = color;
+    console.log(this.selectedColor)
   }
 
   startDrawing(ev: any) {
@@ -396,6 +398,14 @@ export class Tab2Page implements AfterViewInit {
     this.buttonSelected = this.buttons[0];
   }
 
+  managementFont(plus?: boolean) {
+    if (plus) {
+      this.fontSize += 3
+    } else {
+      this.fontSize -= 3
+    }
+  }
+
   drawText(): void {
     this.whriteText = false;
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
@@ -409,7 +419,9 @@ export class Tab2Page implements AfterViewInit {
     const resultY = step1Y / screenWidthY
 
     const context = canvasEl.getContext('2d');
-    context.font = "20px Arial";
+    context.font = `${this.fontSize}px Arial`;
+    context.fillStyle = this.selectedColor;
+
     context.fillText(this.textValue, resultX, resultY * 2);
   }
 }
