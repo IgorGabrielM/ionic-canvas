@@ -70,8 +70,9 @@ export class Tab2Page implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.canvasElement = this.canvas.nativeElement;
+
     this.canvasElement.width = this.plt.width() + '';
-    this.canvasElement.height = 200;
+    this.canvasElement.height = (this.plt.height() - 300) + '';
 
     const ctx = this.canvasElement.getContext('2d');
 
@@ -362,7 +363,7 @@ export class Tab2Page implements AfterViewInit {
     let ctx = this.canvasElement.getContext('2d');
 
     background.onload = () => {
-      ctx.drawImage(background, resultX, resultY, this.resizableElement.nativeElement.offsetWidth, this.resizableElement.nativeElement.offsetHeight / 2)
+      ctx.drawImage(background, resultX, resultY, this.resizableElement.nativeElement.offsetWidth, this.resizableElement.nativeElement.offsetHeight)
     }
 
     setTimeout(() => {
@@ -422,6 +423,7 @@ export class Tab2Page implements AfterViewInit {
     context.font = `${this.fontSize}px Arial`;
     context.fillStyle = this.selectedColor;
 
-    context.fillText(this.textValue, resultX, resultY * 2);
+
+    context.fillText(this.textValue, resultX, resultY);
   }
 }
