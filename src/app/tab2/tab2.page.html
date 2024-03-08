@@ -1,11 +1,5 @@
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 2</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div>
+  <div class="absolute flex flex-col right-2">
     <ion-button *ngFor="let button of buttons" (click)="selectFunction(button)"
       [color]="buttonSelected === button ? 'primary': 'medium'">
       <ion-icon [name]="button.icon"></ion-icon>
@@ -19,27 +13,32 @@
   <!--   <canvas *ngIf="buttonSelected.id !== 1"
     style="border: 1px #fff solid; width: 100%; height: 400px; background-color: white;" #imageCanvas></canvas> -->
 
-  <div *ngIf="buttonSelected.id === 1">
-    <ion-row>
-      <ion-col *ngFor="let color of colors" [style.background]="color" style="height: 45px;" class="color-block"
-        tappable (click)="selectColor(color)"></ion-col>
-    </ion-row>
-    <ion-radio-group [(ngModel)]="selectedColor">
-      <ion-row>
-        <ion-col *ngFor="let color of colors" class="ion-text-center">
-          <ion-radio [value]="color"></ion-radio>
-        </ion-col>
-      </ion-row>
-    </ion-radio-group>
+  <div *ngIf="buttonSelected.id === 1 || buttonSelected.id === 3" class="absolute top-0 z-0">
+    <ion-col>
+      <ion-row *ngFor="let color of colors" [style.background]="color" style="width: 30px; height: 30px;"
+        [class]="color === '#fff' && selectedColor === color ? 'border-2 border-black' : selectedColor === color ? 'border-2 border-white' : ''"
+        tappable (click)="selectColor(color)"></ion-row>
+    </ion-col>
+  </div>
 
-    <ion-range min="2" max="20" color="primary" [(ngModel)]="lineWidth" style="width: 90%; margin: 0 auto;">
-      <ion-icon size="small" slot="start" name="brush"></ion-icon>
-      <ion-icon slot="end" name="brush"></ion-icon>
+  <div *ngIf="buttonSelected.id === 1" style="left: 30vw;" class="absolute top-0 z-0">
+    <ion-range color="black" min="2" max="20" color="primary" [(ngModel)]="lineWidth"
+      style="width: 45vw; margin: 0 auto;">
+      <ion-icon size="small" color="primary" slot="start" name="brush"></ion-icon>
+      <ion-icon slot="end" color="primary" name="brush"></ion-icon>
     </ion-range>
   </div>
 
-  <div *ngIf="buttonSelected.id === 4" class="flex border border-black bg-gray-100">
-    <div *ngFor="let shape of shapes" class="bg-white border-2 border-black p-1" (click)="backgroundImage = shape">
+  <div *ngIf="buttonSelected.id === 3" style="left: 30vw;" class="absolute top-0 z-0">
+    <ion-range color="black" min="20" max="100" color="primary" [(ngModel)]="lineWidth"
+      style="width: 45vw; margin: 0 auto;">
+      <ion-icon size="small" color="primary" slot="start" name="text"></ion-icon>
+      <ion-icon slot="end" color="primary" name="text"></ion-icon>
+    </ion-range>
+  </div>
+
+  <div *ngIf="buttonSelected.id === 4" class="flex flex-col border border-black bg-gray-100 absolute top-0 z-0">
+    <div *ngFor="let shape of shapes" class="w-10 bg-white border-2 border-black p-1" (click)="backgroundImage = shape">
       <img [src]="shape" alt="Imagem flecha" class="w-12">
     </div>
   </div>
@@ -52,12 +51,31 @@
       (touchstart)="onTouchStart($event)">
       <div class="resize-handle" (mousedown)="onResizeMouseDown($event)" (touchstart)="onResizeTounched($event)"></div>
       <!--Conteúdo redimensionável-->
-      <p *ngIf="buttonSelected.id === 3" class="text-lg" [style.color]="selectedColor" [style.font-size.px]="fontSize">
+      <p *ngIf="buttonSelected.id === 3" class="text-lg" [style.color]="selectedColor" [style.font-size.px]="lineWidth">
         {{ textValue }}
       </p>
+      <div *ngIf="buttonSelected.id === 2 || buttonSelected.id === 4"
+        class="absolute bottom-[-55px] flex justify-between gap-2">
+        <ion-button class="w-full rounded-full" (click)="setImageOnCanvas()">
+          <ion-icon name="checkmark-circle"></ion-icon>
+        </ion-button>
+        <ion-button class="w-full rounded-full" (click)="cancelImage()" color="danger">
+          <ion-icon name="close-circle"></ion-icon>
+        </ion-button>
+      </div>
+      <div *ngIf="buttonSelected.id === 3" class="absolute bottom-[-55px] flex justify-between gap-2">
+        <div class="flex justify-between gap-2">
+          <ion-button class="w-full rounded-full" (click)="drawText()">
+            <ion-icon name="checkmark-circle"></ion-icon>
+          </ion-button>
+          <ion-button class="w-full rounded-full" (click)="cancelText()" color="danger">
+            <ion-icon name="close-circle"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
     </div>
 
-    <div *ngIf="buttonSelected.id === 2 || buttonSelected.id === 4" class="mt-2 flex justify-between gap-2">
+    <!--     <div *ngIf="buttonSelected.id === 2 || buttonSelected.id === 4" class="mt-2 flex justify-between gap-2">
       <ion-button class="w-full rounded-full" (click)="setImageOnCanvas()">
         <ion-icon slot="start" name="checkmark-circle"></ion-icon>
         Confirmar
@@ -66,25 +84,25 @@
         <ion-icon slot="start" name="close-circle"></ion-icon>
         Cancelar
       </ion-button>
-    </div>
+    </div> -->
   </div>
 
   <div *ngIf="buttonSelected.id === 3" class="mt-2">
-    <ion-row>
+    <!--     <ion-row>
       <ion-col *ngFor="let color of colors" [style.background]="color" style="height: 45px;" class="color-block"
         tappable (click)="selectColor(color)"></ion-col>
-    </ion-row>
+    </ion-row> -->
 
-    <div class="flex justify-between my-2 gap-2">
+    <!--     <div class="flex justify-between my-2 gap-2">
       <ion-button (click)="managementFont()" class="w-full rounded-xl">
         <ion-icon name="remove-circle"></ion-icon>
       </ion-button>
       <ion-button (click)="managementFont(true)" class="w-full rounded-xl">
         <ion-icon name="add-circle"></ion-icon>
       </ion-button>
-    </div>
+    </div> -->
 
-    <div class="flex justify-between gap-2">
+    <!--     <div class="flex justify-between gap-2">
       <ion-button class="w-full rounded-full" (click)="drawText()">
         <ion-icon slot="start" name="checkmark-circle"></ion-icon>
         Confirmar
@@ -94,25 +112,26 @@
         <ion-icon slot="start" name="close-circle"></ion-icon>
         Cancelar
       </ion-button>
-    </div>
-  </div>
-
-  <div class="w-full flex justify-end">
-    <div class="w-8/12 flex justify-between gap-2 mt-2 mx-2">
-      <ion-button class="w-full rounded-full" (click)="clear()" color="danger">
-        <ion-icon slot="start" name="trash"></ion-icon>
-        Limpar
-      </ion-button>
-      <ion-button class="w-full rounded-full" (click)="exportCanvasImage()">
-        <ion-icon slot="start" name="download"></ion-icon>
-        Salvar
-      </ion-button>
-    </div>
+    </div> -->
   </div>
 
   <div class="my-3">
     <img *ngIf="imageSaved" [src]="imageSaved">
   </div>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button>
+      <ion-icon name="apps"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-list side="top">
+      <ion-fab-button (click)="exportCanvasImage()">
+        <ion-icon name="save"></ion-icon>
+      </ion-fab-button>
+      <ion-fab-button (click)="clear()">
+        <ion-icon name="trash"></ion-icon>
+      </ion-fab-button>
+    </ion-fab-list>
+  </ion-fab>
 </ion-content>
 
 <ion-modal [isOpen]="whriteText">

@@ -72,7 +72,7 @@ export class Tab2Page implements AfterViewInit {
     this.canvasElement = this.canvas.nativeElement;
 
     this.canvasElement.width = this.plt.width() + '';
-    this.canvasElement.height = (this.plt.height() - 300) + '';
+    this.canvasElement.height = (this.plt.height() - 15) + '';
 
     const ctx = this.canvasElement.getContext('2d');
 
@@ -86,6 +86,7 @@ export class Tab2Page implements AfterViewInit {
   selectFunction(button: { id: number, name: string, icon: string }) {
     this.buttonSelected = button;
     if (button.id === 1) {
+      this.lineWidth = 3;
       this.startDraw();
       this.textValue = undefined
     }
@@ -96,6 +97,10 @@ export class Tab2Page implements AfterViewInit {
     }
     if (button.id === 3) {
       this.startText();
+      this.lineWidth = 20;
+      this.canDraw = false
+    }
+    if (button.id === 4) {
       this.canDraw = false
     }
   }
@@ -107,7 +112,6 @@ export class Tab2Page implements AfterViewInit {
 
   selectColor(color) {
     this.selectedColor = color;
-    console.log(this.selectedColor)
   }
 
   startDrawing(ev: any) {
@@ -399,14 +403,6 @@ export class Tab2Page implements AfterViewInit {
     this.buttonSelected = this.buttons[0];
   }
 
-  managementFont(plus?: boolean) {
-    if (plus) {
-      this.fontSize += 3
-    } else {
-      this.fontSize -= 3
-    }
-  }
-
   drawText(): void {
     this.whriteText = false;
     const canvasEl: HTMLCanvasElement = this.canvas.nativeElement;
@@ -420,10 +416,9 @@ export class Tab2Page implements AfterViewInit {
     const resultY = step1Y / screenWidthY
 
     const context = canvasEl.getContext('2d');
-    context.font = `${this.fontSize}px Arial`;
+    context.font = `${this.lineWidth}px Arial`;
     context.fillStyle = this.selectedColor;
 
-
-    context.fillText(this.textValue, resultX, resultY);
+    context.fillText(this.textValue, resultX, (resultY + 25));
   }
 }
