@@ -51,7 +51,7 @@ export class Tab2Page implements AfterViewInit {
   saveY: number;
   drawing = false;
 
-  selectedColor = '#9e2956';
+  selectedColor = '#000';
   colors = ['#000', '#fff', '#9e2956', '#c2281d', '#de722f', '#edbf4c', '#5db37e', '#459ced', '#4250ad', '#802fa3']
   shapes: string[] = ['../../assets/shapes/arrow.png', '../../assets/shapes/square.png']
   lineWidth = 5;
@@ -383,13 +383,6 @@ export class Tab2Page implements AfterViewInit {
     this.startDraw()
   }
 
-  exportCanvasImage() {
-    const dataUrl = this.canvasElement.toDataURL();
-    this.fileSystemImageService.getPhoto(2, dataUrl).then((res: any) => {
-      this.imageSaved = res.webviewPath
-    })
-  }
-
   //text
   startText() {
     this.whriteText = true;
@@ -420,5 +413,13 @@ export class Tab2Page implements AfterViewInit {
     context.fillStyle = this.selectedColor;
 
     context.fillText(this.textValue, resultX, (resultY + 25));
+  }
+
+  //Save
+  exportCanvasImage() {
+    const dataUrl = this.canvasElement.toDataURL();
+    this.fileSystemImageService.getPhoto(2, dataUrl).then((res: any) => {
+      this.imageSaved = res.webviewPath
+    })
   }
 }
